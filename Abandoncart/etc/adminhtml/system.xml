@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="Abandoncart" translate="label" sortOrder="200">
+            <label>Abandoncart</label>
+        </tab>
+        <section id="Abandoncart" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Abandoncart</label>
+            <tab>Abandoncart</tab>
+            <resource>MDC_Abandoncart::config_Abandoncart</resource>
+            <group id="Abandoncart" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Options</label>
+                 <field id="email_template" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Abandoned Email Select All Email</label>
+                    <source_model>MDC\Abandoncart\Model\Config\Source\EmailTemplate</source_model>
+                </field>
+                <field id="number" translate="label" type="text" sortOrder="30" showInDefault="1">
+                    <label>Timing in hours</label>
+                    <validate>validate-number validate-digits validate-digits-range digits-range-0-23</validate>
+                </field>
+
+            </group>
+        </section>
+    </system>
+</config>
