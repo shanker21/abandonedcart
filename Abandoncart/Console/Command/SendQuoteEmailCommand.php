@@ -25,7 +25,7 @@ class SendQuoteEmailCommand extends Command
     protected $senderResolver;
     protected $customerRepository;
 
-    //const XML_PATH_ABANDONED_EMAIL = 'Abandoncart/Abandoncart/email_template';
+    
 
     public function __construct(
         TransportBuilder $transportBuilder,
@@ -57,6 +57,9 @@ class SendQuoteEmailCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // Set the area code to FRONTEND
+        $this->appState->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
+
         $quoteCollection = $this->quoteCollectionFactory->create();
         $quoteIds = $quoteCollection->getAllIds();
         if (!empty($quoteIds)) {
@@ -64,7 +67,7 @@ class SendQuoteEmailCommand extends Command
                 // Load the quote by ID
                 list($quote, $customer) = $this->loadQuoteById($quoteId);
                 // Check if the quote exists
-                if ($quote) {
+                if ($quote && $quote->getIsActive()) {
                     // Get quote items
                     $quoteItems = $quote->getAllVisibleItems();
                     foreach ($quoteItems as $quoteItem) {
@@ -118,15 +121,20 @@ class SendQuoteEmailCommand extends Command
             'product_name' => $productName,
             'product_price' => $productPrice,
         ];
+        $senderInfo = [
+            'name' => 'wilsharefarmfood', // Replace with your sender's name
+            'email' => 'mereddy.rajesh9@gmail.com', // Replace with your sender's email address
+        ];
 
         // Set the area code to FRONTEND
-        $this->appState->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
+        //$this->appState->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
 
 
         // Create the email transport
         $this->transportBuilder->setTemplateIdentifier($templateId)
         ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => $this->storeManager->getStore()->getId()])
         ->setTemplateVars($templateVars)
+        ->setFrom($senderInfo) // Set the sender information here
         ->addTo($recipientEmail)
         ->getTransport()
         ->sendMessage();
